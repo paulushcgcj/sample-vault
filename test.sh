@@ -28,11 +28,25 @@ WRAPPED_VAULT_TOKEN=$(echo $VAULT_TOKEN_WRAP | jq -r '.wrap_info.token')
 
 echo $BROKER_URL/v1/provision/approle/secret-id
 echo "WRAPPED_VAULT_TOKEN=$WRAPPED_VAULT_TOKEN"
+VAULT_TOKEN=$WRAPPED_VAULT_TOKEN
 
-UNWRAPPED_VAULT_TOKEN=$(curl -s -X POST $VAULT_ADDR/v1/sys/wrapping/unwrap -H 'X-Vault-Token: '"$WRAPPED_VAULT_TOKEN"'')
+#echo "Unwrapping using the cli"
+#vault unwrap $WRAPPED_VAULT_TOKEN
 
-echo $VAULT_ADDR/v1/sys/wrapping/unwrap
-echo "UNWRAPPED_VAULT_TOKEN=$UNWRAPPED_VAULT_TOKEN"
+#echo "Unwrapping using the api"
+#UNWRAPPED_VAULT_TOKEN=$(curl -s -X POST $VAULT_ADDR/v1/sys/wrapping/unwrap \
+#            -H 'X-Vault-Token: '$VAULT_TOKEN''\
+#            -H 'Content-Type: application/json' \
+#            -d '{"token":"'$WRAPPED_VAULT_TOKEN'"}' \
+#            )
+
+#echo $VAULT_ADDR/v1/sys/wrapping/unwrap
+#echo "UNWRAPPED_VAULT_TOKEN=$UNWRAPPED_VAULT_TOKEN"
+
+
+PROXY_DATA=$(vault read -format "json" $VAULT_SECRET_PATH | jq '.data.data')
+echo $PROXY_DATA
+
 
 #VAULT_TOKEN=$(echo -n $UNWRAPPED_VAULT_TOKEN | jq -r '.auth.client_token')
 #echo "VAULT_TOKEN=$UNWRAPPED_VAULT_TOKEN" >> $ENV_VAULT_TOKEN
