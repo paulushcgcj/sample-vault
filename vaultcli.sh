@@ -13,6 +13,7 @@ THEWRAP=$(
 
 echo "Wrapped $DATA to $THEWRAP"
 
+vault unwrap -format "json" $THEWRAP
 echo "#####################################################################################################"
 
 sleep 1
@@ -23,3 +24,5 @@ sleep 1
 vault unwrap -format "json" $THEWRAP | jq '.data'
 echo "#####################################################################################################"
 
+PROXY_DATA=$(vault read -format "json" $VAULT_SECRET_PATH | jq '.data.data')
+echo $PROXY_DATA

@@ -26,6 +26,7 @@ echo "ACTION_TOKEN=$ACTION_TOKEN"
 VAULT_TOKEN_WRAP=$(curl -s -X POST $BROKER_URL/v1/provision/approle/secret-id -H 'x-broker-token: '"$ACTION_TOKEN"'' -H 'x-vault-role-id: '"$PROVISION_ROLE_ID"'')
 WRAPPED_VAULT_TOKEN=$(echo $VAULT_TOKEN_WRAP | jq -r '.wrap_info.token')
 
+echo "" 
 echo $BROKER_URL/v1/provision/approle/secret-id
 echo "WRAPPED_VAULT_TOKEN=$WRAPPED_VAULT_TOKEN"
 VAULT_TOKEN=$WRAPPED_VAULT_TOKEN
@@ -43,7 +44,7 @@ VAULT_TOKEN=$WRAPPED_VAULT_TOKEN
 #echo $VAULT_ADDR/v1/sys/wrapping/unwrap
 #echo "UNWRAPPED_VAULT_TOKEN=$UNWRAPPED_VAULT_TOKEN"
 
-
+echo ""
 PROXY_DATA=$(vault read -format "json" $VAULT_SECRET_PATH | jq '.data.data')
 echo $PROXY_DATA
 
@@ -57,5 +58,6 @@ CLOSE_RESPONSE=$(curl -s -X POST $BROKER_URL/v1/intention/close \
     -H "x-broker-token: $INTENTION_TOKEN" \    
     )
 
+echo ""
 echo "$BROKER_URL/v1/intention/close"
 echo $CLOSE_RESPONSE
